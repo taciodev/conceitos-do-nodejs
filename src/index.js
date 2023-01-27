@@ -15,15 +15,15 @@ function checksExistsUserAccount(req, res, next) {
 
   const user = users.find((user) => user.username === username);
 
-  if (user) {
-    return res.status(400).json({ error: "User is not found" });
+  if (!user) {
+    return res.status(400).json({ error: "O usuário já existe" });
   }
 
   req.user = user;
   return next();
 }
 
-app.post('/users', checksExistsUserAccount, (req, res) => {
+app.post('/users', (req, res) => {
   const { name, username } = req.body;
 
   const user = {
@@ -34,10 +34,12 @@ app.post('/users', checksExistsUserAccount, (req, res) => {
   };
 
   users.push(user);
-  return res.status(201).send();
+  return res.status(201).json(user);
 });
 
 app.get('/todos', checksExistsUserAccount, (req, res) => {
+  const { user } = req;
+  return res.status(200).json(user.todos);
   // Complete aqui
 });
 
