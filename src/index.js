@@ -16,7 +16,7 @@ function checksExistsUserAccount(req, res, next) {
   const user = users.find(user => user.username === username);
 
   if (!user) {
-    return res.status(400).json({ error: "O usuário já existe" });
+    return res.status(400).json({ error: "User does not exist in the database" });
   }
 
   req.user = user;
@@ -83,7 +83,17 @@ app.patch('/todos/:id/done', checksExistsUserAccount, (req, res) => {
 });
 
 app.delete('/todos/:id', checksExistsUserAccount, (req, res) => {
-  // Complete aqui
+  const { user } = req;
+  const { id } = req.params;
+
+  const todo = user.todos.find(todo => todo.id === id);
+
+  if (!todo) {
+    res.status(400).json({ error: "The task does not exist" });
+  }
+
+  user.todos = user.todos.filter(todo => todo.id !== id);
+  return res.status(200).json(user.todos);
 });
 
 module.exports = app;
