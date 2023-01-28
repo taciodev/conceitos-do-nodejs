@@ -40,10 +40,22 @@ app.post('/users', (req, res) => {
 app.get('/todos', checksExistsUserAccount, (req, res) => {
   const { user } = req;
   return res.status(200).json(user.todos);
-  // Complete aqui
 });
 
 app.post('/todos', checksExistsUserAccount, (req, res) => {
+  const { user } = req;
+  const { title, deadline } = req.body;
+
+  const todo = {
+    id: uuidv4(),
+    title,
+    done: false,
+    deadline: new Date(deadline),
+    created_at: new Date()
+  };
+
+  user.todos.push(todo);
+  return res.status(201).json(user);
   // Complete aqui
 });
 
