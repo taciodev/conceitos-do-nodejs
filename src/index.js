@@ -56,11 +56,19 @@ app.post('/todos', checksExistsUserAccount, (req, res) => {
 
   user.todos.push(todo);
   return res.status(201).json(user);
-  // Complete aqui
 });
 
 app.put('/todos/:id', checksExistsUserAccount, (req, res) => {
-  // Complete aqui
+  const { user } = req;
+  const { id } = req.params;
+  const { title, deadline } = req.body;
+
+  const todo = user.todos.find(todo => todo.id === id);
+
+  todo.title = title;
+  todo.deadline = new Date(deadline);
+
+  return res.status(200).json(user);
 });
 
 app.patch('/todos/:id/done', checksExistsUserAccount, (req, res) => {
